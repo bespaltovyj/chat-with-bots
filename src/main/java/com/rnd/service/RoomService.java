@@ -21,8 +21,7 @@ public class RoomService {
         return id;
     }
 
-    public boolean checkAccessToRoom(Principal mailSender, String roomId) {
-        String loginMailSender = mailSender.getName();
+    public boolean checkAccessToRoom(String loginMailSender, String roomId) {
         Room room = rooms.get(roomId);
         if (room == null) {
             throw new IllegalArgumentException("Invalid room id");
@@ -30,7 +29,7 @@ public class RoomService {
         // Is the user who invited another in the same chat
         return room.getUserSessions().
                 stream()
-                .map(session1 -> session1.getPrincipal().getName())
+                .map(session1 -> UserService.getUsernameFromPrincipal(session1.getPrincipal()))
                 .anyMatch(o -> Objects.equals(loginMailSender, o));
     }
 

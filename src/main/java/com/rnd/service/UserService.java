@@ -2,11 +2,13 @@ package com.rnd.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +54,16 @@ public class UserService {
         for (WebSocketSession webSocketSession: usersOnline.values()) {
             webSocketSession.sendMessage(message);
         }
+    }
+
+    public static String getUsernameFromPrincipal(Principal principal) {
+        if (principal instanceof OAuth2AuthenticationToken) {
+            return (String)((OAuth2AuthenticationToken) principal)
+                    .getPrincipal()
+                    .getAttributes()
+                    .get("name");
+        }
+        return principal.getName();
     }
 
 }

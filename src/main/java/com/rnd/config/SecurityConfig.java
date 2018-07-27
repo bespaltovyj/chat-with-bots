@@ -15,19 +15,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .formLogin()
-                .loginPage("/index.html")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/chats.html", true)
-                .permitAll()
-                .and()
                 .authorizeRequests()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/bots-socket/**").permitAll()
-                .anyRequest().authenticated();
+                    .antMatchers("/webjars/**").permitAll()
+                    .antMatchers("/bots-socket/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                    .loginPage("/index.html")
+                    .loginProcessingUrl("/login")
+                    .defaultSuccessUrl("/chats.html", true)
+                    .permitAll()
+                .and()
+                .oauth2Login()
+                    .loginPage("/index.html")
+                    .defaultSuccessUrl("/chats.html", true)
+                    .authorizationEndpoint()
+                        .baseUri("/oauth2/override-authorize")
+                ;
     }
-
-
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

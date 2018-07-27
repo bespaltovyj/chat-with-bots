@@ -2,7 +2,6 @@ package com.rnd.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rnd.domain.Message;
-import com.rnd.domain.Type;
 import com.rnd.service.BotService;
 import com.rnd.service.MessageBuilder;
 import com.rnd.service.RoomService;
@@ -37,6 +36,8 @@ public class MessageHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
         Message message = mapper.readValue(textMessage.getPayload(), Message.class);
+        Principal principal = session.getPrincipal();
+        String usernameSender = UserService.getUsernameFromPrincipal(principal);
         switch (message.getType()) {
             case CREATE_ROOM: {
                 String roomId = roomService.createRoom();
@@ -46,7 +47,7 @@ public class MessageHandler extends TextWebSocketHandler {
                 break;
             }
             case ADD_USER: {
-                boolean access = roomService.checkAccessToRoom(session.getPrincipal(), message.getRoomId());
+                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId());
                 if (access) {
                     boolean isBot = false;
                     WebSocketSession destinationSession = userService.getUserSessionByLogin(message.getUserLogin());
@@ -63,10 +64,9 @@ public class MessageHandler extends TextWebSocketHandler {
                 break;
             }
             case SEND_MESSAGE: {
-                Principal principal = session.getPrincipal();
-                boolean access = roomService.checkAccessToRoom(principal, message.getRoomId());
+                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId());
                 if (access) {
-                    message.setUserLogin(principal.getName());
+                    message.setUserLogin(usernameSender);
                     TextMessage responseTextMessage = new TextMessage(mapper.writeValueAsString(message));
                     roomService.sendMessage(message.getRoomId(), false, responseTextMessage);
                     roomService.sendMessage(message.getRoomId(), true, responseTextMessage);
@@ -92,13 +92,15 @@ public class MessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         Principal principal = session.getPrincipal();
-        userService.userLogin(principal.getName(), session);
+        String username = UserService.getUsernameFromPrincipal(principal);
+        userService.userLogin(username, session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         Principal principal = session.getPrincipal();
-        userService.userLogout(principal.getName());
+        String username = UserService.getUsernameFromPrincipal(principal);
+        userService.userLogout(username);
         roomService.userLogout(session);
     }
 }
