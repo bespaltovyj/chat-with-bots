@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/webjars/bootstrap/4.1.1/css/bootstrap.min.css">
+    <title>Чат рум</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-2">
+        <h4>Пользователи онлайн</h4>
+        <button type="button" class="btn btn-primary" id="addUserBtn" disabled="disabled">Добавить в чат</button>
+    </div>
+    <div class="col-3">
+        <h4>Список чатов</h4>
+        <button type="button" class="btn btn-primary" id="createChatRoomBtn" disabled="disabled">Создать чат</button>
+    </div>
+    <div class="col-5">
+        <h4>Чат</h4>
+    </div>
+    <div class="col-1">
+        <div id="sec-message">
+
+        </div>
+    </div>
+    <div class="col-1">
+        <a href="/logout">Выйти</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-2">
+        <div class="list-group" id="users-list" role="tablist">
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="nav nav-pills" role="tablist" aria-orientation="vertical" id="chats-tab">
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="tab-content" id="chats-tabContent">
+        </div>
+    </div>
+</div>
+
+</body>
+    <script src="/webjars/jquery/3.3.1-1/jquery.min.js" type="text/javascript"></script>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js" type="text/javascript"></script>
+    <script src="/webjars/bootstrap/4.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/js/chats.js" type="text/javascript"></script>
+</html>
