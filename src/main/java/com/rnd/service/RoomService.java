@@ -21,14 +21,14 @@ public class RoomService {
         return id;
     }
 
-    public boolean checkAccessToRoom(String loginMailSender, String roomId) {
+    public boolean checkAccessToRoom(String loginMailSender, String roomId, boolean isBot) {
         Room room = rooms.get(roomId);
         if (room == null) {
             throw new IllegalArgumentException("Invalid room id");
         }
+        List<WebSocketSession> sessions = isBot ? room.getBotSessions() : room.getUserSessions();
         // Is the user who invited another in the same chat
-        return room.getUserSessions().
-                stream()
+        return sessions.stream()
                 .map(session1 -> UserService.getUsernameFromPrincipal(session1.getPrincipal()))
                 .anyMatch(o -> Objects.equals(loginMailSender, o));
     }

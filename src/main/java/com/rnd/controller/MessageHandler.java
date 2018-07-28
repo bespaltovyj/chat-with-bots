@@ -47,7 +47,7 @@ public class MessageHandler extends TextWebSocketHandler {
                 break;
             }
             case ADD_USER: {
-                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId());
+                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId(), false);
                 if (access) {
                     boolean isBot = false;
                     WebSocketSession destinationSession = userService.getUserSessionByLogin(message.getUserLogin());
@@ -64,7 +64,7 @@ public class MessageHandler extends TextWebSocketHandler {
                 break;
             }
             case SEND_MESSAGE: {
-                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId());
+                boolean access = roomService.checkAccessToRoom(usernameSender, message.getRoomId(), false);
                 if (access) {
                     message.setUserLogin(usernameSender);
                     TextMessage responseTextMessage = new TextMessage(mapper.writeValueAsString(message));

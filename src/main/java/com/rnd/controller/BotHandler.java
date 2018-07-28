@@ -29,8 +29,13 @@ public class BotHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage textMessage) throws Exception {
+        String botName = botService.getBotNameBySession(session);
         Message message = mapper.readValue(textMessage.getPayload(), Message.class);
-        message.setUserLogin(botService.getBotNameBySession(session));
+        boolean access = roomService.checkAccessToRoom(botName, message.getRoomId(), true);
+        if (!access) {
+            return;
+        }
+        message.setUserLogin(botName);
         message.setType(Type.SEND_MESSAGE);
         roomService.sendMessage(message.getRoomId(), false, new TextMessage(mapper.writeValueAsString(message)));
     }
