@@ -37,8 +37,7 @@ public class BotHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        String botName = "bot-" + UUID.randomUUID().toString();
-        botService.botConnect(botName, session);
+        botService.botConnect(botService.getBotNameBySession(session), session);
     }
 
     @Override

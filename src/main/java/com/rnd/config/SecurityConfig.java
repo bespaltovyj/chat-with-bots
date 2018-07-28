@@ -17,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/webjars/**").permitAll()
-                    .antMatchers("/bots-socket/**").permitAll()
+                    .antMatchers("/bots-socket/**").hasRole("BOT")
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()

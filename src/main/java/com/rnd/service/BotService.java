@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.*;
 
 @Service
@@ -27,9 +28,6 @@ public class BotService {
         botsOnline.put(botName,session);
     }
 
-    public void botDisconnect(String botName){
-        botsOnline.remove(botName);
-    }
 
     public void botDisconnect(WebSocketSession session) throws IOException {
         String botName = getBotNameBySession(session);
@@ -39,19 +37,8 @@ public class BotService {
     }
 
     public String getBotNameBySession(WebSocketSession session) {
-        /*String botName = null;
-        for (Map.Entry<String, WebSocketSession> entry : botsOnline.entrySet()) {
-            WebSocketSession sessionOut = entry.getValue();
-            if (Objects.equals(session, sessionOut)) {
-                botName = entry.getKey();
-            }
-        }
-        return botName;*/
-        return botsOnline.entrySet().stream()
-                .filter(x -> Objects.equals(x.getValue(), session))
-                .findAny()
-                .get().getKey();
-
+        Principal principal = session.getPrincipal();
+        return principal.getName();
     }
 
     public void sendBotsOnline(WebSocketSession session) throws IOException {
