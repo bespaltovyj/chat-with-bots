@@ -49,12 +49,14 @@ function connect(){
 	    if (response.type == "USERS_ONLINE") {
 	        var usersOnline = JSON.parse(response.content);
 	        usersOnline.forEach(function(item, i, arr) {
-              $("#users-list").append(createUserTag(item));
+              $("#users-list").append($(createIdentIcon()).jdenticon(item))
+                              .append(createUserTag(item));
             });
 	    }
 
 	    if (response.type == "USER_LOGIN") {
-            $("#users-list").append(createUserTag(response.userLogin));
+            $("#users-list").append($(createIdentIcon()).jdenticon(response.userLogin))
+                            .append(createUserTag(response.userLogin));
         }
         if (response.type == "USER_LOGOUT") {
             $("#users-list").find("a").filter( function(i, el) {
@@ -75,6 +77,11 @@ function connect(){
     ws.onclose = function () {
 	    console.log('Info: WebSocket connection closed.');
     };
+}
+
+function createIdentIcon() {
+    return '<canvas width="80" height="80"></canvas>';
+
 }
 
 function createUserTag(login) {
