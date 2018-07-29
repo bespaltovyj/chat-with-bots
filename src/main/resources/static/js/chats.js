@@ -17,7 +17,7 @@ $(function(){
       if (!ws) {
         return;
       }
-      var user = $("#users-list").find("a.active").html();
+      var user = $("#users-list").find(".user-item.active").find("a:first").html();
       if (!user) {
         alert("Пользователь не выбран")
         return;
@@ -87,7 +87,7 @@ function createUserListItem(login) {
 }
 
 function createInputGroup() {
-    return '<div class="btn-group user-item" role="group"></div>';
+    return '<div class="btn-group user-item list-group-item list-group-item-action" data-toggle="list" role="group"></div>';
 }
 
 function createIdentIcon() {
@@ -95,7 +95,7 @@ function createIdentIcon() {
 }
 
 function createUserTag(login) {
-    return '<a class="list-group-item list-group-item-action" data-toggle="list" role="tab">' + login + '</a>';
+    return '<a>' + login + '</a>';
 }
 
 function createChatRoom(roomId) {
