@@ -49,18 +49,20 @@ function connect(){
 	    if (response.type == "USERS_ONLINE") {
 	        var usersOnline = JSON.parse(response.content);
 	        usersOnline.forEach(function(item, i, arr) {
-              $("#users-list").append($(createIdentIcon()).jdenticon(item))
-                              .append(createUserTag(item));
+              $("#users-list").append(createUserListItem(item));
             });
 	    }
 
 	    if (response.type == "USER_LOGIN") {
-            $("#users-list").append($(createIdentIcon()).jdenticon(response.userLogin))
-                            .append(createUserTag(response.userLogin));
+            $("#users-list").append(createUserListItem(response.userLogin));
         }
         if (response.type == "USER_LOGOUT") {
-            $("#users-list").find("a").filter( function(i, el) {
+            /*$("#users-list").find("a").filter( function(i, el) {
                 return $(el).html() == response.userLogin;
+            }
+            ).remove();*/
+            $("#users-list").find(".user-item").filter( function(i, el) {
+                return $(el).find("a:first").html() == response.userLogin;
             }
             ).remove();
         }
@@ -79,9 +81,17 @@ function connect(){
     };
 }
 
-function createIdentIcon() {
-    return '<canvas width="80" height="80"></canvas>';
+function createUserListItem(login) {
+    return $(createInputGroup()).append($(createIdentIcon()).jdenticon(login))
+                                .append(createUserTag(login));
+}
 
+function createInputGroup() {
+    return '<div class="btn-group user-item" role="group"></div>';
+}
+
+function createIdentIcon() {
+    return '<canvas width="40" height="40"></canvas>';
 }
 
 function createUserTag(login) {
